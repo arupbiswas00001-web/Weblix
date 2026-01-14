@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weblix - Digital Link Hub</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e); 
+            color: #fff; 
+            margin: 0; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        h1 { 
+            color: #00ff88; 
+            font-size: 2.5em; 
+            text-shadow: 0 0 10px #00ff88; 
+            margin-bottom: 20px; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+        .link-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid #00ff88; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin: 10px; 
+            width: calc(100% - 20px); /* Full width on mobile */
+            max-width: 300px; /* Limit on larger screens */
+            transition: transform 0.3s; 
+            box-sizing: border-box; 
+        }
+        .link-card:hover { 
+            transform: scale(1.05); 
+        }
+        a { 
+            color: #00ff88; 
+            text-decoration: none; 
+            font-weight: bold; 
+            display: inline-block; 
+            padding: 10px 20px; 
+            border: 1px solid #00ff88; 
+            border-radius: 5px; 
+            margin-top: 10px; 
+            font-size: 1.1em; /* Larger for touch */
+        }
+        .stats { 
+            margin-top: 20px; 
+            font-size: 1.2em; 
+            padding: 10px; 
+        }
+        /* Responsive adjustments */
+        @media (min-width: 768px) { /* Desktop/tablet */
+            .link-card { 
+                width: calc(50% - 20px); /* Two columns */
+            }
+        }
+        @media (min-width: 1024px) { /* Larger desktop */
+            .link-card { 
+                width: calc(33.33% - 20px); /* Three columns */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Weblix</h1>
+    <p>Welcome to your digital link hub. Click to explore and help us track engagement!</p>
+    
+    <div class="container">
+        <!-- Link Cards (Edit here to add more links) -->
+        <div class="link-card">
+            <h3>Example Link 1</h3>
+            <p>Description: Visit this page and sign up.</p>
+            <a href="#" onclick="trackClick('link1', 'https://example.com')">Tap Here</a>
+        </div>
+        <div class="link-card">
+            <h3>Example Link 2</h3>
+            <p>Description: Check out this resource.</p>
+            <a href="#" onclick="trackClick('link2', 'https://another-example.com')">Tap Here</a>
+        </div>
+        <!-- Add more cards as needed -->
+    </div>
+    
+    <div class="stats">
+        <p>Total Clicks: <span id="totalClicks">0</span></p>
+        <p>Link 1 Clicks: <span id="link1Clicks">0</span> | Link 2 Clicks: <span id="link2Clicks">0</span></p>
+    </div>
+
+    <script>
+        // Basic click tracking (secure: no external data leaks, uses local storage)
+        let clickData = JSON.parse(localStorage.getItem('weblixClicks')) || { total: 0, link1: 0, link2: 0 };
+        
+        function trackClick(linkId, url) {
+            // Sanitize: Ensure URL is valid (basic check)
+            if (!url.startsWith('http')) return;
+            
+            // Log click
+            clickData.total++;
+            clickData[linkId]++;
+            localStorage.setItem('weblixClicks', JSON.stringify(clickData));
+            
+            // Update display
+            document.getElementById('totalClicks').textContent = clickData.total;
+            document.getElementById('link1Clicks').textContent = clickData.link1;
+            document.getElementById('link2Clicks').textContent = clickData.link2;
+            
+            // Redirect (secure: prevents XSS by not injecting user input)
+            window.location.href = url;
+        }
+        
+        // Load initial stats on page load
+        window.onload = function() {
+            document.getElementById('totalClicks').textContent = clickData.total;
+            document.getElementById('link1Clicks').textContent = clickData.link1;
+            document.getElementById('link2Clicks').textContent = clickData.link2;
+        };
+    </script>
+</body>
+</html>
